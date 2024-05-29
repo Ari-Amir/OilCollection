@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.OilCollectionApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryContainer">@color/primary_color</item>
+        <item name="android:colorBackground">@color/background_color</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="fontFamily">@font/poppins_regular</item> <!-- Ensure you have this font in your project -->
+    </style>
+</resources>
