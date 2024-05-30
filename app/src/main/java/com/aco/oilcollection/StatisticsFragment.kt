@@ -32,7 +32,7 @@ fun StatisticsFragment(viewModel: OilCollectionViewModel) {
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Text(
-                    text = "${formatDateTime(item.dateTime)}   -   Collected ${item.litersCollected} liters",
+                    text = "${formatDateTime(item.dateTime)}  -  Collected ${item.litersCollected} liters",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(16.dp)
