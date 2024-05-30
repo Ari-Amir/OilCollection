@@ -8,11 +8,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.aco.oilcollectionapp.database.OilCollectionViewModel
 
 @Composable
-fun StatisticsFragment(collectionHistory: List<String>) {
+fun StatisticsFragment(viewModel: OilCollectionViewModel) {
+    val collectionHistory by viewModel.collectionHistory.collectAsState()
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
@@ -27,7 +32,7 @@ fun StatisticsFragment(collectionHistory: List<String>) {
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Text(
-                    text = item,
+                    text = "${item.dateTime} Collected ${item.litersCollected} liters",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(16.dp)

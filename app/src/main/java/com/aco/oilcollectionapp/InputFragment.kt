@@ -1,8 +1,7 @@
 package com.aco.oilcollectionapp
 
+import android.util.Log
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -14,9 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +32,7 @@ fun InputFragment(remainingVolume: Int, onAddLiters: (Int) -> Unit) {
     val context = LocalContext.current
 
     fun handleAddLiters() {
+        Log.d("InputFragment", "handleAddLiters called")
         val enteredLiters = liters.filter { it.isDigit() }.toIntOrNull()
         if (remainingVolume == 0) {
             Toast.makeText(
@@ -43,6 +41,7 @@ fun InputFragment(remainingVolume: Int, onAddLiters: (Int) -> Unit) {
                 Toast.LENGTH_SHORT
             ).show()
         } else if (enteredLiters != null && enteredLiters <= remainingVolume) {
+            Log.d("InputFragment", "onAddLiters called with $enteredLiters")
             onAddLiters(enteredLiters)
             liters = ""
         } else {
@@ -54,6 +53,7 @@ fun InputFragment(remainingVolume: Int, onAddLiters: (Int) -> Unit) {
             liters = ""
         }
     }
+
 
     Column(
         modifier = Modifier
