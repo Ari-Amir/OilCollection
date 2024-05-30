@@ -11,6 +11,10 @@ class OilCollectionRepository(private val dao: OilCollectionRecordDao) {
     fun getAllRecords(): Flow<List<OilCollectionRecord>> {
         return dao.getAllRecords()
     }
+
+    fun getRecordsForToday(startOfDay: Long, endOfDay: Long): Flow<List<OilCollectionRecord>> {
+        return dao.getRecordsForToday(startOfDay, endOfDay)
+    }
 }
 
 

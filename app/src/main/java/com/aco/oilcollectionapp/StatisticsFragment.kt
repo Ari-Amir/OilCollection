@@ -32,7 +32,7 @@ fun StatisticsFragment(viewModel: OilCollectionViewModel) {
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Text(
-                    text = "${item.dateTime} Collected ${item.litersCollected} liters",
+                    text = "${formatDateTime(item.dateTime)} Collected ${item.litersCollected} liters",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(16.dp)
@@ -41,3 +41,9 @@ fun StatisticsFragment(viewModel: OilCollectionViewModel) {
         }
     }
 }
+
+fun formatDateTime(millis: Long): String {
+    val sdf = java.text.SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", java.util.Locale.getDefault())
+    return sdf.format(java.util.Date(millis))
+}
+

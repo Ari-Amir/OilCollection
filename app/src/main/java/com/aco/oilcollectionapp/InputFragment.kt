@@ -1,6 +1,5 @@
 package com.aco.oilcollectionapp
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,28 +25,38 @@ import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputFragment(remainingVolume: Int, onAddLiters: (Int) -> Unit) {
+fun InputFragment(
+    remainingVolume: Int,
+    onAddLiters: (Int) -> Unit,
+) {
     var liters by remember { mutableStateOf("") }
     val currentDate = remember { mutableStateOf(getCurrentDate()) }
     val context = LocalContext.current
 
     fun handleAddLiters() {
-        Log.d("InputFragment", "handleAddLiters called")
         val enteredLiters = liters.filter { it.isDigit() }.toIntOrNull()
+        if (liters == "0") {
+            Toast.makeText(
+                context,
+                "Please enter a value greater than zero.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         if (remainingVolume == 0) {
             Toast.makeText(
                 context,
-                "Вы достигли лимита, больше нет свободного объема.",
+                "You have reached the limit, there is no more available space.",
                 Toast.LENGTH_SHORT
             ).show()
+            liters = ""
         } else if (enteredLiters != null && enteredLiters <= remainingVolume) {
-            Log.d("InputFragment", "onAddLiters called with $enteredLiters")
             onAddLiters(enteredLiters)
             liters = ""
         } else {
             Toast.makeText(
                 context,
-                "Можно только $remainingVolume литров или меньше",
+                "You can only have $remainingVolume liters or less.",
                 Toast.LENGTH_SHORT
             ).show()
             liters = ""
