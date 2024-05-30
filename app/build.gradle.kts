@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.aco.oilcollectionapp"
+    namespace = "com.aco.oilcollection"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.aco.oilcollectionapp"
+        applicationId = "com.aco.oilcollection"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

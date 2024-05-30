@@ -1,7 +1,9 @@
-package com.aco.oilcollectionapp.database
+package com.aco.oilcollection.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.aco.oilcollection.database.OilCollectionRecord
+import com.aco.oilcollection.database.OilCollectionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.SharingStarted

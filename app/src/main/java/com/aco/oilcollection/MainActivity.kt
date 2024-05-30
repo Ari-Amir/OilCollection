@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp
+package com.aco.oilcollection
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,13 +13,14 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
-import com.aco.oilcollectionapp.database.AppDatabase
-import com.aco.oilcollectionapp.database.OilCollectionRepository
-import com.aco.oilcollectionapp.database.OilCollectionViewModel
-import com.aco.oilcollectionapp.database.OilCollectionViewModelFactory
-import com.aco.oilcollectionapp.ui.theme.OilCollectionAppTheme
+import com.aco.oilcollection.database.AppDatabase
+import com.aco.oilcollection.database.OilCollectionRepository
+import com.aco.oilcollection.ui.theme.OilCollectionAppTheme
+import com.aco.oilcollection.viewmodel.OilCollectionViewModel
+import com.aco.oilcollection.viewmodel.OilCollectionViewModelFactory
 import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
@@ -71,6 +72,7 @@ fun ViewPagerScreen(
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(modifier = modifier.fillMaxSize()) {
         TabRow(selectedTabIndex = pagerState.currentPage) {
@@ -89,6 +91,7 @@ fun ViewPagerScreen(
                 onClick = {
                     coroutineScope.launch {
                         pagerState.scrollToPage(1)
+                        keyboardController?.hide()
                     }
                 }
             )
@@ -96,7 +99,10 @@ fun ViewPagerScreen(
         HorizontalPager(count = 2, state = pagerState) { page ->
             when (page) {
                 0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters)
-                1 -> StatisticsFragment(viewModel = viewModel)
+                1 -> {
+                    keyboardController?.hide()
+                    StatisticsFragment(viewModel = viewModel)
+                }
             }
         }
     }

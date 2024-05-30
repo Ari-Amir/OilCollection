@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp
+package com.aco.oilcollection
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -32,10 +32,12 @@ fun InputFragment(
     var liters by remember { mutableStateOf("") }
     val currentDate = remember { mutableStateOf(getCurrentDate()) }
     val context = LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
+    var enteredLiters by remember { mutableIntStateOf(0) }
 
     fun handleAddLiters() {
-        val enteredLiters = liters.filter { it.isDigit() }.toIntOrNull()
-        if (liters == "0") {
+        enteredLiters = liters.filter { it.isDigit() }.toIntOrNull() ?: 0
+        if (enteredLiters == 0) {
             Toast.makeText(
                 context,
                 "Please enter a value greater than zero.",
@@ -50,9 +52,8 @@ fun InputFragment(
                 Toast.LENGTH_SHORT
             ).show()
             liters = ""
-        } else if (enteredLiters != null && enteredLiters <= remainingVolume) {
-            onAddLiters(enteredLiters)
-            liters = ""
+        } else if (enteredLiters <= remainingVolume && enteredLiters > 0) {
+            showDialog = true
         } else {
             Toast.makeText(
                 context,
@@ -63,6 +64,40 @@ fun InputFragment(
         }
     }
 
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Confirm Action") },
+            text = { Text("Are you sure you want to add $enteredLiters liters?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (enteredLiters <= remainingVolume) {
+                            onAddLiters(enteredLiters)
+                            liters = ""
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "You can only have $remainingVolume liters or less.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        showDialog = false
+                    }
+                ) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDialog = false }
+                ) {
+                    Text("No")
+                }
+            }
+        )
+    }
 
     Column(
         modifier = Modifier

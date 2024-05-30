@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp
+package com.aco.oilcollection
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aco.oilcollectionapp.database.OilCollectionViewModel
+import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 
 @Composable
 fun StatisticsFragment(viewModel: OilCollectionViewModel) {
@@ -32,7 +32,7 @@ fun StatisticsFragment(viewModel: OilCollectionViewModel) {
                 elevation = CardDefaults.cardElevation(4.dp)
             ) {
                 Text(
-                    text = "${formatDateTime(item.dateTime)} Collected ${item.litersCollected} liters",
+                    text = "${formatDateTime(item.dateTime)}   -   Collected ${item.litersCollected} liters",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(16.dp)
@@ -43,7 +43,7 @@ fun StatisticsFragment(viewModel: OilCollectionViewModel) {
 }
 
 fun formatDateTime(millis: Long): String {
-    val sdf = java.text.SimpleDateFormat("dd MMMM yyyy, HH:mm:ss", java.util.Locale.getDefault())
+    val sdf = java.text.SimpleDateFormat("dd MMMM yyyy 'at' HH:mm:ss", java.util.Locale.getDefault())
     return sdf.format(java.util.Date(millis))
 }
 

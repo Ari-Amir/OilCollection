@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp
+package com.aco.oilcollection
 
 import org.junit.Test
 

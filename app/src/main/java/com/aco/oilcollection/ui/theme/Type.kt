@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp.ui.theme
+package com.aco.oilcollection.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

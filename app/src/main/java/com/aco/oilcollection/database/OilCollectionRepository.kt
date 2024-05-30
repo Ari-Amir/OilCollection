@@ -1,4 +1,4 @@
-package com.aco.oilcollectionapp.database
+package com.aco.oilcollection.database
 
 import kotlinx.coroutines.flow.Flow
 
