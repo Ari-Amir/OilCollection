@@ -1,4 +1,4 @@
-package com.aco.oilcollection
+package com.aco.oilcollection.fragments
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

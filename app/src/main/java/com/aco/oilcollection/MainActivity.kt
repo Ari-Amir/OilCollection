@@ -1,34 +1,32 @@
 package com.aco.oilcollection
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import com.aco.oilcollection.ui.BlockScreen
+import com.aco.oilcollection.ui.isTrialPeriodExpired
 import com.aco.oilcollection.database.AppDatabase
 import com.aco.oilcollection.database.OilCollectionRepository
+import com.aco.oilcollection.ui.ViewPagerScreen
 import com.aco.oilcollection.ui.theme.OilCollectionAppTheme
+import com.aco.oilcollection.utils.alignBottomWithPadding
+import com.aco.oilcollection.utils.getCurrentDateTime
 import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 import com.aco.oilcollection.viewmodel.OilCollectionViewModelFactory
-import com.google.accompanist.pager.*
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var database: AppDatabase
@@ -46,9 +44,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             OilCollectionAppTheme {
                 val repository = OilCollectionRepository(database.oilCollectionRecordDao())
-                val viewModel: OilCollectionViewModel = viewModel(factory = OilCollectionViewModelFactory(repository))
+                val viewModel: OilCollectionViewModel =
+                    viewModel(factory = OilCollectionViewModelFactory(repository))
 
                 val remainingVolume by viewModel.remainingVolume.collectAsState()
+                val isTrialExpired = remember { isTrialPeriodExpired() }
+
+                if (isTrialExpired) {
+                    BlockScreen()
+                }
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ViewPagerScreen(
@@ -56,79 +60,31 @@ class MainActivity : ComponentActivity() {
                         remainingVolume = remainingVolume,
                         onAddLiters = { liters ->
                             val currentDateTime = getCurrentDateTime()
-                            viewModel.addRecord(currentDateTime, liters, "default_user", "default_location")
+                            viewModel.addRecord(
+                                currentDateTime,
+                                liters,
+                                "default_user",
+                                "default_location"
+                            )
                         },
                         viewModel = viewModel
                     )
 
-                    Box(
+                    Text(
+                        text = "® 2024 AriAmir",
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp)
-                    ) {
-                        Text(
-                            text = "® 2024 AriAmir",
-                            modifier = Modifier
-                                .align(Alignment.BottomStart)
-                                .padding((1).dp),
-                            color = Color.Gray.copy(alpha = 0.5f),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Light
-                        )
-                    }
-                }
-            }
-        }
+                            .padding(start = 16.dp)
+                            .alignBottomWithPadding(5.dp),
+                        color = Color.Gray.copy(alpha = 0.5f),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Light
+                    )
 
-    }
-}
-
-
-@OptIn(ExperimentalPagerApi::class)
-@Composable
-fun ViewPagerScreen(
-    modifier: Modifier = Modifier,
-    remainingVolume: Int,
-    onAddLiters: (Int) -> Unit,
-    viewModel: OilCollectionViewModel
-) {
-    val pagerState = rememberPagerState()
-    val coroutineScope = rememberCoroutineScope()
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    Column(modifier = modifier.fillMaxSize()) {
-        TabRow(selectedTabIndex = pagerState.currentPage) {
-            Tab(
-                text = { Text("Input") },
-                selected = pagerState.currentPage == 0,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(0)
-                    }
-                }
-            )
-            Tab(
-                text = { Text("Statistics") },
-                selected = pagerState.currentPage == 1,
-                onClick = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(1)
-                        keyboardController?.hide()
-                    }
-                }
-            )
-        }
-        HorizontalPager(count = 2, state = pagerState) { page ->
-            when (page) {
-                0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters)
-                1 -> {
-                    keyboardController?.hide()
-                    StatisticsFragment(viewModel = viewModel)
                 }
             }
         }
     }
 }
-private fun getCurrentDateTime(): Long {
-    return System.currentTimeMillis()
-}
+
+
+

@@ -1,4 +1,4 @@
-package com.aco.oilcollection
+package com.aco.oilcollection.fragments
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -20,8 +20,9 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.text.SimpleDateFormat
-import java.util.*
+import com.aco.oilcollection.R
+import com.aco.oilcollection.utils.getCurrentDate
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -201,9 +202,4 @@ fun InputFragment(
             }
         }
     }
-}
-
-fun getCurrentDate(): String {
-    val sdf = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-    return sdf.format(Date())
 }
