@@ -38,7 +38,10 @@ fun AuthScreen(viewModel: AuthViewModel, onAuthSuccess: () -> Unit) {
                 onValueChange = { name = it },
                 label = { Text("Name") },
                 singleLine = true,
-                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words)
+                keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
+                modifier = Modifier
+                    .widthIn(max = 300.dp)
+                    .padding(vertical = 8.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }

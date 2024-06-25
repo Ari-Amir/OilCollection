@@ -9,6 +9,8 @@ import java.security.MessageDigest
 
 class AuthViewModel(private val userDao: UserDao) : ViewModel() {
 
+    private var currentUser: User? = null
+
     fun register(email: String, password: String, name: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
             val existingUser = userDao.getUserByEmail(email)
@@ -18,6 +20,7 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
                 val hashedPassword = hashPassword(password)
                 val newUser = User(email = email, passwordHash = hashedPassword, name = name, isLoggedIn = true)
                 userDao.insert(newUser)
+                currentUser = newUser
                 onSuccess()
             }
         }
@@ -32,6 +35,7 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
                 onError("Incorrect password")
             } else {
                 userDao.setLoginStatus(user.id, true)
+                currentUser = user
                 onSuccess()
             }
         }
@@ -40,7 +44,15 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
     fun logout(userId: Int) {
         viewModelScope.launch {
             userDao.setLoginStatus(userId, false)
+            currentUser = null
         }
+    }
+
+    fun setCurrentUser(user: User) {
+        currentUser = user
+    }
+    fun getCurrentUser(): User? {
+        return currentUser
     }
 
     private fun hashPassword(password: String): String {

@@ -177,8 +177,8 @@ fun InputFragment(
                 onClick = { handleAddLiters() },
                 shape = RoundedCornerShape(50),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFA0E7E5),
-                    contentColor = MaterialTheme.colorScheme.onPrimary
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = Color.White
                 ),
                 elevation = ButtonDefaults.elevatedButtonElevation(
                     defaultElevation = 8.dp,
@@ -195,11 +195,12 @@ fun InputFragment(
                 Text(
                     text = "Add",
                     fontSize = 35.sp,
-                    color = Color.Black,
+                    color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.poppins_regular)),
                 )
             }
+
         }
     }
 }
