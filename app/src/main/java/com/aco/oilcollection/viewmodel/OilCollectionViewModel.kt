@@ -3,7 +3,7 @@ package com.aco.oilcollection.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aco.oilcollection.database.OilCollectionRecord
-import com.aco.oilcollection.database.OilCollectionRepository
+import com.aco.oilcollection.repository.OilCollectionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,11 +35,11 @@ class OilCollectionViewModel(private val repository: OilCollectionRepository) : 
         }
     }
 
-    fun addRecord(dateTime: Long, litersCollected: Int, user: String, location: String) {
+    fun addRecord(dateTime: Long, litersCollected: Int, userId: Int, location: String) {
         val newRecord = OilCollectionRecord(
             dateTime = dateTime,
             litersCollected = litersCollected,
-            user = user,
+            userId = userId,
             location = location
         )
 

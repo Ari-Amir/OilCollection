@@ -2,7 +2,7 @@ package com.aco.oilcollection.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.aco.oilcollection.database.OilCollectionRepository
+import com.aco.oilcollection.repository.OilCollectionRepository
 
 class OilCollectionViewModelFactory(
     private val repository: OilCollectionRepository

@@ -43,7 +43,7 @@ fun BlockScreen() {
 
 @SuppressLint("NewApi")
 fun isTrialPeriodExpired(): Boolean {
-    val endDate = LocalDate.of(2030, 6, 3)
+    val endDate = LocalDate.of(2024, 8, 5)
     val currentDate = LocalDate.now()
     return currentDate.isAfter(endDate) || currentDate.isEqual(endDate)
 }
