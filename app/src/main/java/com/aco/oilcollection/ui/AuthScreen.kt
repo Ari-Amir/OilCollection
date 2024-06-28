@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.aco.oilcollection.viewmodel.AuthViewModel
 
+
 @Composable
 fun AuthScreen(viewModel: AuthViewModel, onAuthSuccess: () -> Unit) {
     var email by remember { mutableStateOf("") }
@@ -39,9 +40,7 @@ fun AuthScreen(viewModel: AuthViewModel, onAuthSuccess: () -> Unit) {
                 label = { Text("Name") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(capitalization = KeyboardCapitalization.Words),
-                modifier = Modifier
-                    .widthIn(max = 300.dp)
-                    .padding(vertical = 8.dp)
+                modifier = Modifier.widthIn(max = 300.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
         }

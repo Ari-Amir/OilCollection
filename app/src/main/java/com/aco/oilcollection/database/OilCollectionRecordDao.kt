@@ -16,5 +16,7 @@ interface OilCollectionRecordDao {
     @Query("SELECT * FROM oil_collection_records WHERE dateTime BETWEEN :startOfDay AND :endOfDay")
     fun getRecordsForToday(startOfDay: Long, endOfDay: Long): Flow<List<OilCollectionRecord>>
 
-}
+    @Query("SELECT name FROM users WHERE id = :userId")
+    suspend fun getUserNameById(userId: Int): String?
 
+}

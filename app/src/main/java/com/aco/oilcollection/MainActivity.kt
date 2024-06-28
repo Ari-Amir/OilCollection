@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.room.Room
@@ -36,7 +34,6 @@ import com.aco.oilcollection.viewmodel.AuthViewModel
 import com.aco.oilcollection.viewmodel.AuthViewModelFactory
 import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 import com.aco.oilcollection.viewmodel.OilCollectionViewModelFactory
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +55,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         lifecycleScope.launch {
-            //delay(500)
             try {
                 val userDao = database.userDao()
                 val loggedInUser = userDao.getLoggedInUser()
@@ -96,7 +92,7 @@ class MainActivity : ComponentActivity() {
                                             isUserLoggedIn = true
                                             currentUserEmail = loggedInUser.email
                                             currentUserId = loggedInUser.id
-                                            authViewModel.setCurrentUser(loggedInUser) // Используем существующий метод
+                                            authViewModel.setCurrentUser(loggedInUser)
                                         }
                                         navController.navigate("home") {
                                             popUpTo("auth") { inclusive = true }
@@ -115,7 +111,7 @@ class MainActivity : ComponentActivity() {
                                         val userDao = database.userDao()
                                         val loggedInUser = userDao.getLoggedInUser()
                                         if (loggedInUser != null) {
-                                            authViewModel.setCurrentUser(loggedInUser) // Используем существующий метод
+                                            authViewModel.setCurrentUser(loggedInUser)
                                         }
                                     } catch (e: Exception) {
                                         // Log error if needed
@@ -132,13 +128,13 @@ class MainActivity : ComponentActivity() {
                                         ViewPagerScreen(
                                             modifier = Modifier.padding(innerPadding),
                                             remainingVolume = remainingVolume,
-                                            onAddLiters = { liters ->
+                                            onAddLiters = { liters, location ->
                                                 val currentDateTime = getCurrentDateTime()
                                                 viewModel.addRecord(
                                                     currentDateTime,
                                                     liters,
                                                     currentUserId ?: 1,
-                                                    "default_location"
+                                                    location
                                                 )
                                             },
                                             viewModel = viewModel,

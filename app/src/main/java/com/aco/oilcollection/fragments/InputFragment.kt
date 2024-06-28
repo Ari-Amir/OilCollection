@@ -1,6 +1,8 @@
 package com.aco.oilcollection.fragments
 
 import android.widget.Toast
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -28,13 +31,36 @@ import com.aco.oilcollection.utils.getCurrentDate
 @Composable
 fun InputFragment(
     remainingVolume: Int,
-    onAddLiters: (Int) -> Unit,
+    onAddLiters: (Int, String) -> Unit,
 ) {
     var liters by remember { mutableStateOf("") }
     val currentDate = remember { mutableStateOf(getCurrentDate()) }
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     var enteredLiters by remember { mutableIntStateOf(0) }
+    var expanded by remember { mutableStateOf(false) }
+    var selectedLocation by remember { mutableStateOf("Select location") }
+    val locations = listOf(
+        "KFC Mt Albert",
+        "KFC Mt Roskill",
+        "KFC Manukau",
+        "Mc Donalds East Tamaki",
+        "Mc Donalds North Shore",
+        "Mc Donalds Britomart",
+        "Mc Donalds Avondale",
+        "Mc Donalds New Lynn",
+        "Mc Donalds Takanini",
+        "KFC Mt Albert",
+        "KFC Mt Roskill",
+        "KFC Manukau",
+        "Mc Donalds East Tamaki",
+        "Mc Donalds North Shore",
+        "Mc Donalds Britomart",
+        "Mc Donalds Avondale",
+        "Mc Donalds New Lynn",
+        "Mc Donalds Takanini"
+    )
+
 
     fun handleAddLiters() {
         enteredLiters = liters.filter { it.isDigit() }.toIntOrNull() ?: 0
@@ -53,7 +79,7 @@ fun InputFragment(
                 Toast.LENGTH_SHORT
             ).show()
             liters = ""
-        } else if (enteredLiters <= remainingVolume && enteredLiters > 0) {
+        } else if (enteredLiters in 1..remainingVolume) {
             showDialog = true
         } else {
             Toast.makeText(
@@ -75,8 +101,9 @@ fun InputFragment(
                 TextButton(
                     onClick = {
                         if (enteredLiters <= remainingVolume) {
-                            onAddLiters(enteredLiters)
+                            onAddLiters(enteredLiters, selectedLocation)
                             liters = ""
+                            selectedLocation = "Select location"
                         } else {
                             Toast.makeText(
                                 context,
@@ -201,6 +228,45 @@ fun InputFragment(
                 )
             }
 
+
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .border(1.dp, Color.White)
+            ) {
+                val boxWidth = constraints.maxWidth
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = selectedLocation,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true }
+                            .padding(16.dp)
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current) { boxWidth.toDp() })
+                    ) {
+                        locations.forEach { location ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedLocation = location
+                                    expanded = false
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                text = { Text(text = location) }
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }

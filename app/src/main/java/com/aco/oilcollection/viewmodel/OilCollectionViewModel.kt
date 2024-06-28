@@ -6,22 +6,22 @@ import com.aco.oilcollection.database.OilCollectionRecord
 import com.aco.oilcollection.repository.OilCollectionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import java.util.Calendar
 
-class OilCollectionViewModel(private val repository: OilCollectionRepository) : ViewModel() {
+
+open class OilCollectionViewModel(private val repository: OilCollectionRepository) : ViewModel() {
 
     private val _remainingVolume = MutableStateFlow(1800)
     val remainingVolume: StateFlow<Int> = _remainingVolume
 
-    val collectionHistory: StateFlow<List<OilCollectionRecord>> =
-        repository.getAllRecords()
-            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+    private val _collectionHistory = MutableStateFlow<List<Pair<OilCollectionRecord, String>>>(emptyList())
+    val collectionHistory: StateFlow<List<Pair<OilCollectionRecord, String>>> = _collectionHistory
+
 
     init {
         loadRecordsForToday()
+        loadAllRecordsWithUserNames()
     }
 
     private fun loadRecordsForToday() {
@@ -31,6 +31,18 @@ class OilCollectionViewModel(private val repository: OilCollectionRepository) : 
             repository.getRecordsForToday(startOfDay, endOfDay).collect { records ->
                 val totalCollected = records.sumOf { it.litersCollected }
                 _remainingVolume.value = 1800 - totalCollected
+            }
+        }
+    }
+
+    private fun loadAllRecordsWithUserNames() {
+        viewModelScope.launch {
+            repository.getAllRecords().collect { records ->
+                val recordsWithUsers = records.map { record ->
+                    val userName = repository.getUserNameById(record.userId) ?: "Unknown"
+                    record to userName
+                }
+                _collectionHistory.value = recordsWithUsers
             }
         }
     }

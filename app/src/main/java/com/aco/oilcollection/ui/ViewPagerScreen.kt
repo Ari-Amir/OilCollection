@@ -25,10 +25,10 @@ import com.aco.oilcollection.viewmodel.AuthViewModel
 fun ViewPagerScreen(
     modifier: Modifier = Modifier,
     remainingVolume: Int,
-    onAddLiters: (Int) -> Unit,
+    onAddLiters: (Int, String) -> Unit,
     viewModel: OilCollectionViewModel,
-    authViewModel: AuthViewModel, // Add this parameter
-    navController: NavHostController // Add this parameter
+    authViewModel: AuthViewModel,
+    navController: NavHostController
 ) {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -71,7 +71,7 @@ fun ViewPagerScreen(
                 0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters)
                 1 -> {
                     keyboardController?.hide()
-                    StatisticsFragment(viewModel = viewModel)
+                    StatisticsFragment(viewModel = viewModel, authViewModel = authViewModel)
                 }
                 2 -> {
                     keyboardController?.hide()

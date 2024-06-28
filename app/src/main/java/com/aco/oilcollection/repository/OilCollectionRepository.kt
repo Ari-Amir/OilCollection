@@ -17,4 +17,8 @@ class OilCollectionRepository(private val oilCollectionRecordDao: OilCollectionR
     fun getRecordsForToday(startOfDay: Long, endOfDay: Long): Flow<List<OilCollectionRecord>> {
         return oilCollectionRecordDao.getRecordsForToday(startOfDay, endOfDay)
     }
+
+    suspend fun getUserNameById(userId: Int): String? {
+        return oilCollectionRecordDao.getUserNameById(userId)
+    }
 }
