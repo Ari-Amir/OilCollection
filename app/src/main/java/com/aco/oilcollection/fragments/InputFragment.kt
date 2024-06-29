@@ -1,13 +1,12 @@
 package com.aco.oilcollection.fragments
 
 import android.widget.Toast
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,6 +15,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -44,21 +44,21 @@ fun InputFragment(
         "KFC Mt Albert",
         "KFC Mt Roskill",
         "KFC Manukau",
-        "Mc Donalds East Tamaki",
-        "Mc Donalds North Shore",
-        "Mc Donalds Britomart",
-        "Mc Donalds Avondale",
-        "Mc Donalds New Lynn",
-        "Mc Donalds Takanini",
+        "McDonald's East Tamaki",
+        "McDonald's North Shore",
+        "McDonald's Britomart",
+        "McDonald's Avondale",
+        "McDonald's New Lynn",
+        "McDonald's Takanini",
         "KFC Mt Albert",
         "KFC Mt Roskill",
         "KFC Manukau",
-        "Mc Donalds East Tamaki",
-        "Mc Donalds North Shore",
-        "Mc Donalds Britomart",
-        "Mc Donalds Avondale",
-        "Mc Donalds New Lynn",
-        "Mc Donalds Takanini"
+        "McDonald's East Tamaki",
+        "McDonald's North Shore",
+        "McDonald's Britomart",
+        "McDonald's Avondale",
+        "McDonald's New Lynn",
+        "McDonald's Takanini"
     )
 
 
@@ -68,6 +68,14 @@ fun InputFragment(
             Toast.makeText(
                 context,
                 "Please enter a value greater than zero.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if (selectedLocation == "Select location") {
+            Toast.makeText(
+                context,
+                "Please enter a location.",
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -96,7 +104,7 @@ fun InputFragment(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirm Action") },
-            text = { Text("Are you sure you want to add $enteredLiters liters?") },
+            text = { Text("Are you sure you want to add $enteredLiters liters to $selectedLocation?") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -169,7 +177,8 @@ fun InputFragment(
                         "Enter liters",
                         fontSize = 40.sp,
                         modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 },
                 textStyle = LocalTextStyle.current.copy(
@@ -185,18 +194,65 @@ fun InputFragment(
                     onDone = { handleAddLiters() }
                 ),
                 colors = TextFieldDefaults.textFieldColors(
-                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled),
                     containerColor = MaterialTheme.colorScheme.background,
                     cursorColor = Color.Transparent,
-                    errorCursorColor = MaterialTheme.colorScheme.error,
-                    focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                    unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled),
-                    disabledIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = ContentAlpha.disabled)
+                    focusedIndicatorColor = Color.Black,
+                    unfocusedIndicatorColor = Color.Black
                 ),
                 shape = MaterialTheme.shapes.medium,
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                val boxWidth = constraints.maxWidth
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = selectedLocation,
+                        fontSize = 35.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = true }
+                            .padding(16.dp),
+                        style = TextStyle(
+                            lineHeight = 50.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier
+                            .width(with(LocalDensity.current) { boxWidth.toDp() })
+                            .heightIn(max = 300.dp)
+                    ) {
+                        locations.forEach { location ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedLocation = location
+                                    expanded = false
+                                },
+                                modifier = Modifier.fillMaxWidth(),
+                                text = { Text(text = location) }
+                            )
+                        }
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(if (selectedLocation != "Select location") 2.dp else 1.dp)
+                            .background(Color.Black)
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -226,46 +282,6 @@ fun InputFragment(
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.poppins_regular)),
                 )
-            }
-
-
-            BoxWithConstraints(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .border(1.dp, Color.White)
-            ) {
-                val boxWidth = constraints.maxWidth
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = selectedLocation,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { expanded = true }
-                            .padding(16.dp)
-                    )
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier
-                            .width(with(LocalDensity.current) { boxWidth.toDp() })
-                    ) {
-                        locations.forEach { location ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    selectedLocation = location
-                                    expanded = false
-                                },
-                                modifier = Modifier.fillMaxWidth(),
-                                text = { Text(text = location) }
-                            )
-                        }
-                    }
-                }
             }
         }
     }
