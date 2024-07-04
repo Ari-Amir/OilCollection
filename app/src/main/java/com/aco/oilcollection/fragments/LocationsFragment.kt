@@ -17,7 +17,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.aco.oilcollection.database.Location
+import com.aco.oilcollection.database.entities.Location
 import com.aco.oilcollection.viewmodel.LocationViewModel
 
 @Composable

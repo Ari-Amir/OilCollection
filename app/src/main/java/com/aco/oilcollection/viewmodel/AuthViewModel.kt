@@ -2,24 +2,24 @@ package com.aco.oilcollection.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aco.oilcollection.database.User
-import com.aco.oilcollection.database.UserDao
+import com.aco.oilcollection.database.entities.User
+import com.aco.oilcollection.repository.UserRepository
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
-class AuthViewModel(private val userDao: UserDao) : ViewModel() {
+class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private var currentUser: User? = null
 
     fun register(email: String, password: String, name: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val existingUser = userDao.getUserByEmail(email)
+            val existingUser = userRepository.getUserByEmail(email)
             if (existingUser != null) {
                 onError("User already exists")
             } else {
                 val hashedPassword = hashPassword(password)
                 val newUser = User(email = email, passwordHash = hashedPassword, name = name, isLoggedIn = true)
-                userDao.insert(newUser)
+                userRepository.insert(newUser)
                 currentUser = newUser
                 onSuccess()
             }
@@ -28,13 +28,13 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
 
     fun login(email: String, password: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val user = userDao.getUserByEmail(email)
+            val user = userRepository.getUserByEmail(email)
             if (user == null) {
                 onError("User not found")
             } else if (user.passwordHash != hashPassword(password)) {
                 onError("Incorrect password")
             } else {
-                userDao.setLoginStatus(user.id, true)
+                userRepository.setLoginStatus(user.id, true)
                 currentUser = user
                 onSuccess()
             }
@@ -43,7 +43,7 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
 
     fun logout(userId: Int) {
         viewModelScope.launch {
-            userDao.setLoginStatus(userId, false)
+            userRepository.setLoginStatus(userId, false)
             currentUser = null
         }
     }
@@ -51,6 +51,7 @@ class AuthViewModel(private val userDao: UserDao) : ViewModel() {
     fun setCurrentUser(user: User) {
         currentUser = user
     }
+
     fun getCurrentUser(): User? {
         return currentUser
     }

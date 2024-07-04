@@ -3,7 +3,7 @@ package com.aco.oilcollection.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aco.oilcollection.database.Location
+import com.aco.oilcollection.database.entities.Location
 import com.aco.oilcollection.repository.LocationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

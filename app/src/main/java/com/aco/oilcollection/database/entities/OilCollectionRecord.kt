@@ -1,4 +1,4 @@
-package com.aco.oilcollection.database
+package com.aco.oilcollection.database.entities
 
 
 import androidx.room.Entity

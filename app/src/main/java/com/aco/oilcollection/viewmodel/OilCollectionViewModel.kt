@@ -2,7 +2,7 @@ package com.aco.oilcollection.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aco.oilcollection.database.OilCollectionRecord
+import com.aco.oilcollection.database.entities.OilCollectionRecord
 import com.aco.oilcollection.repository.OilCollectionRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

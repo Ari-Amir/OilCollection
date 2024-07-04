@@ -1,8 +1,8 @@
 package com.aco.oilcollection.repository
 
 
-import com.aco.oilcollection.database.Location
-import com.aco.oilcollection.database.LocationDao
+import com.aco.oilcollection.database.entities.Location
+import com.aco.oilcollection.database.dao.LocationDao
 import kotlinx.coroutines.flow.Flow
 
 class LocationRepository(private val locationDao: LocationDao) {

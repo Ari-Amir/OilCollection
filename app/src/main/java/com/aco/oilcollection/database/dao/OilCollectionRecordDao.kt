@@ -1,8 +1,9 @@
-package com.aco.oilcollection.database
+package com.aco.oilcollection.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.aco.oilcollection.database.entities.OilCollectionRecord
 import kotlinx.coroutines.flow.Flow
 
 @Dao

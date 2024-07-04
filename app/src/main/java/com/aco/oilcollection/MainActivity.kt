@@ -24,6 +24,7 @@ import androidx.room.Room
 import com.aco.oilcollection.database.AppDatabase
 import com.aco.oilcollection.repository.LocationRepository
 import com.aco.oilcollection.repository.OilCollectionRepository
+import com.aco.oilcollection.repository.UserRepository
 import com.aco.oilcollection.ui.AuthScreen
 import com.aco.oilcollection.ui.BlockScreen
 import com.aco.oilcollection.ui.ViewPagerScreen
@@ -57,10 +58,13 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
 
+        val oilCollectionRepository = OilCollectionRepository(database.oilCollectionRecordDao())
+        val locationRepository = LocationRepository(database.locationDao())
+        val userRepository = UserRepository(database.userDao())
+
         lifecycleScope.launch {
             try {
-                val userDao = database.userDao()
-                val loggedInUser = userDao.getLoggedInUser()
+                val loggedInUser = userRepository.getLoggedInUser()
                 if (loggedInUser != null) {
                     isUserLoggedIn = true
                     currentUserEmail = loggedInUser.email
@@ -86,11 +90,10 @@ class MainActivity : ComponentActivity() {
                             startDestination = if (isUserLoggedIn) "home" else "auth"
                         ) {
                             composable("auth") {
-                                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(database.userDao()))
+                                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(userRepository))
                                 AuthScreen(viewModel = authViewModel) {
                                     lifecycleScope.launch {
-                                        val userDao = database.userDao()
-                                        val loggedInUser = userDao.getLoggedInUser()
+                                        val loggedInUser = userRepository.getLoggedInUser()
                                         if (loggedInUser != null) {
                                             isUserLoggedIn = true
                                             currentUserEmail = loggedInUser.email
@@ -104,17 +107,13 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable("home") {
-                                val oilCollectionRepository = OilCollectionRepository(database.oilCollectionRecordDao())
                                 val oilCollectionViewModel: OilCollectionViewModel = viewModel(factory = OilCollectionViewModelFactory(oilCollectionRepository))
-                                val locationRepository = LocationRepository(database.locationDao())
                                 val locationViewModel: LocationViewModel = viewModel(factory = LocationViewModelFactory(locationRepository))
-                                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(database.userDao()))
-
+                                val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(userRepository))
 
                                 LaunchedEffect(Unit) {
                                     try {
-                                        val userDao = database.userDao()
-                                        val loggedInUser = userDao.getLoggedInUser()
+                                        val loggedInUser = userRepository.getLoggedInUser()
                                         if (loggedInUser != null) {
                                             authViewModel.setCurrentUser(loggedInUser)
                                         }
@@ -145,7 +144,8 @@ class MainActivity : ComponentActivity() {
                                             oilCollectionViewModel = oilCollectionViewModel,
                                             authViewModel = authViewModel,
                                             locationViewModel = locationViewModel,
-                                            navController = navController)
+                                            navController = navController
+                                        )
 
                                         Text(
                                             text = "® 2024 AriAmir",

@@ -1,7 +1,7 @@
 package com.aco.oilcollection.repository
 
-import com.aco.oilcollection.database.OilCollectionRecord
-import com.aco.oilcollection.database.OilCollectionRecordDao
+import com.aco.oilcollection.database.entities.OilCollectionRecord
+import com.aco.oilcollection.database.dao.OilCollectionRecordDao
 import kotlinx.coroutines.flow.Flow
 
 class OilCollectionRepository(private val oilCollectionRecordDao: OilCollectionRecordDao) {
