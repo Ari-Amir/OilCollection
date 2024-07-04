@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -128,77 +129,86 @@ fun LocationItem(
 
     if (isEditing) {
         setIsEditing(true)
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TextField(
-                value = editedName,
-                onValueChange = { editedName = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    onEdit(location.copy(name = editedName))
-                    setIsEditing(false)
-                }),
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
-            )
-            Button(
-                onClick = {
-                    onEdit(location.copy(name = editedName))
-                    setIsEditing(false)
-                },
-                modifier = Modifier.align(Alignment.CenterVertically)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Save")
-            }
+                TextField(
+                    value = editedName,
+                    onValueChange = { editedName = it },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        onEdit(location.copy(name = editedName))
+                        setIsEditing(false)
+                    }),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                )
+                Button(
+                    onClick = {
+                        onEdit(location.copy(name = editedName))
+                        setIsEditing(false)
+                    },
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                ) {
+                    Text("Save")
+                }
         }
     } else {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .padding(bottom = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(6.dp),
+            elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            Text(
-                location.name,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-            Box {
-                IconButton(
-                    onClick = { showMenu = true },
-                    enabled = editingLocationId == null
-                ) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "More options")
-                }
-                DropdownMenu(
-                    expanded = showMenu,
-                    onDismissRequest = { showMenu = false },
-                    offset = DpOffset(x = (-16).dp, y = 0.dp)
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Edit") },
-                        onClick = {
-                            showMenu = false
-                            isLocalEditing = true
-                            setIsEditing(true)
-                        },
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp).padding(start = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    location.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Box {
+                    IconButton(
+                        onClick = { showMenu = true },
                         enabled = editingLocationId == null
-                    )
-                    DropdownMenuItem(
-                        text = { Text("Delete") },
-                        onClick = {
-                            showMenu = false
-                            onDeleteRequest()
-                        },
-                        enabled = editingLocationId == null
-                    )
+                    ) {
+                        Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                    }
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        offset = DpOffset(x = (-16).dp, y = 0.dp)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Edit") },
+                            onClick = {
+                                showMenu = false
+                                isLocalEditing = true
+                                setIsEditing(true)
+                            },
+                            enabled = editingLocationId == null
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Delete") },
+                            onClick = {
+                                showMenu = false
+                                onDeleteRequest()
+                            },
+                            enabled = editingLocationId == null
+                        )
+                    }
                 }
             }
         }
