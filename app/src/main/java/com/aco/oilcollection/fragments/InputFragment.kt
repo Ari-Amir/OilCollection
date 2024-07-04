@@ -32,7 +32,7 @@ import com.aco.oilcollection.viewmodel.LocationViewModel
 @Composable
 fun InputFragment(
     remainingVolume: Int,
-    onAddLiters: (Int, String) -> Unit,
+    onAddLiters: (Int, Int) -> Unit,
     locationViewModel: LocationViewModel
 ) {
     var liters by remember { mutableStateOf("") }
@@ -42,6 +42,7 @@ fun InputFragment(
     var enteredLiters by remember { mutableIntStateOf(0) }
     var expanded by remember { mutableStateOf(false) }
     var selectedLocation by remember { mutableStateOf("Select location") }
+    var selectedLocationId by remember { mutableIntStateOf(-1) }
     val locations by locationViewModel.locations.collectAsState()
 
     fun handleAddLiters() {
@@ -91,9 +92,10 @@ fun InputFragment(
                 TextButton(
                     onClick = {
                         if (enteredLiters <= remainingVolume) {
-                            onAddLiters(enteredLiters, selectedLocation)
+                            onAddLiters(enteredLiters, selectedLocationId)
                             liters = ""
                             selectedLocation = "Select location"
+                            selectedLocationId = -1
                         } else {
                             Toast.makeText(
                                 context,
@@ -220,6 +222,7 @@ fun InputFragment(
                             DropdownMenuItem(
                                 onClick = {
                                     selectedLocation = location.name
+                                    selectedLocationId = location.id
                                     expanded = false
                                 },
                                 modifier = Modifier.fillMaxWidth(),

@@ -11,15 +11,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.aco.oilcollection.viewmodel.AuthViewModel
 import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 
 @Composable
 fun StatisticsFragment(
     viewModel: OilCollectionViewModel,
-    authViewModel: AuthViewModel,
 ) {
     val collectionHistory by viewModel.collectionHistory.collectAsState()
 
@@ -29,68 +30,64 @@ fun StatisticsFragment(
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        items(collectionHistory) { (record, userName) ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(3.dp)
+        items(collectionHistory) { (record, userName, locationName) ->
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                shape = RoundedCornerShape(8.dp),
+                elevation = CardDefaults.cardElevation(4.dp)
             ) {
-                Card(
-                    modifier = Modifier
-                        .weight(1.4f)
-                        .fillMaxHeight(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = RoundedCornerShape(
-                        topStart = 16.dp,
-                        topEnd = 0.dp,
-                        bottomEnd = 0.dp,
-                        bottomStart = 16.dp
-                    ),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Text(
-                        text = formatDateTime(record.dateTime),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-                Card(
-                    modifier = Modifier
-                        .weight(0.9f)
-                        .fillMaxHeight(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = RoundedCornerShape(0.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Text(
-                        text = "${record.litersCollected} ltrs",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-                Card(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    shape = RoundedCornerShape(
-                        topStart = 0.dp,
-                        topEnd = 16.dp,
-                        bottomEnd = 16.dp,
-                        bottomStart = 0.dp
-                    ),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                    )
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "ID: ${record.id}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            text = formatDateTime(record.dateTime),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(3f)
+                        )
+                        Text(
+                            text = userName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(3f),
+                            textAlign = TextAlign.End
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = locationName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(7f).padding(start = 48.dp)
+                        )
+                        Text(
+                            text = "${record.litersCollected} Ltrs",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(2f),
+                            textAlign = TextAlign.End
+                        )
+                    }
                 }
             }
         }

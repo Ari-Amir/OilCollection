@@ -9,19 +9,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.StateFlow
 import java.util.Calendar
 
-
 open class OilCollectionViewModel(private val repository: OilCollectionRepository) : ViewModel() {
 
     private val _remainingVolume = MutableStateFlow(1800)
     val remainingVolume: StateFlow<Int> = _remainingVolume
 
-    private val _collectionHistory = MutableStateFlow<List<Pair<OilCollectionRecord, String>>>(emptyList())
-    val collectionHistory: StateFlow<List<Pair<OilCollectionRecord, String>>> = _collectionHistory
-
+    private val _collectionHistory = MutableStateFlow<List<Triple<OilCollectionRecord, String, String>>>(emptyList())
+    val collectionHistory: StateFlow<List<Triple<OilCollectionRecord, String, String>>> = _collectionHistory
 
     init {
         loadRecordsForToday()
-        loadAllRecordsWithUserNames()
+        loadAllRecordsWithDetails()
     }
 
     private fun loadRecordsForToday() {
@@ -35,24 +33,25 @@ open class OilCollectionViewModel(private val repository: OilCollectionRepositor
         }
     }
 
-    private fun loadAllRecordsWithUserNames() {
+    private fun loadAllRecordsWithDetails() {
         viewModelScope.launch {
             repository.getAllRecords().collect { records ->
-                val recordsWithUsers = records.map { record ->
+                val recordsWithDetails = records.map { record ->
                     val userName = repository.getUserNameById(record.userId) ?: "Unknown"
-                    record to userName
+                    val locationName = repository.getLocationNameById(record.locationId) ?: "Unknown"
+                    Triple(record, userName, locationName)
                 }
-                _collectionHistory.value = recordsWithUsers
+                _collectionHistory.value = recordsWithDetails
             }
         }
     }
 
-    fun addRecord(dateTime: Long, litersCollected: Int, userId: Int, location: String) {
+    fun addRecord(dateTime: Long, litersCollected: Int, userId: Int, locationId: Int) {
         val newRecord = OilCollectionRecord(
             dateTime = dateTime,
             litersCollected = litersCollected,
             userId = userId,
-            location = location
+            locationId = locationId
         )
 
         viewModelScope.launch {
@@ -60,7 +59,6 @@ open class OilCollectionViewModel(private val repository: OilCollectionRepositor
             loadRecordsForToday()
         }
     }
-
 
     private fun getStartOfDay(): Long {
         val calendar = Calendar.getInstance()

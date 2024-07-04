@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     currentUserId = loggedInUser.id
                 }
             } catch (e: Exception) {
-                // Log error if needed
+                //Logs
             }
 
             setContent {
@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
                                             authViewModel.setCurrentUser(loggedInUser)
                                         }
                                     } catch (e: Exception) {
-                                        // Log error if needed
+                                        //Logs
                                     }
                                 }
 
@@ -132,13 +132,13 @@ class MainActivity : ComponentActivity() {
                                         ViewPagerScreen(
                                             modifier = Modifier.padding(innerPadding),
                                             remainingVolume = remainingVolume,
-                                            onAddLiters = { liters, location ->
+                                            onAddLiters = { liters, locationId ->
                                                 val currentDateTime = getCurrentDateTime()
                                                 oilCollectionViewModel.addRecord(
                                                     currentDateTime,
                                                     liters,
                                                     currentUserId ?: 1,
-                                                    location
+                                                    locationId
                                                 )
                                             },
                                             oilCollectionViewModel = oilCollectionViewModel,

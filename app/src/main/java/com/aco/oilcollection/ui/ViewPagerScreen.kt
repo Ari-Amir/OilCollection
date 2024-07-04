@@ -27,7 +27,7 @@ import com.aco.oilcollection.viewmodel.LocationViewModel
 fun ViewPagerScreen(
     modifier: Modifier = Modifier,
     remainingVolume: Int,
-    onAddLiters: (Int, String) -> Unit,
+    onAddLiters: (Int, Int) -> Unit,
     oilCollectionViewModel: OilCollectionViewModel,
     authViewModel: AuthViewModel,
     locationViewModel: LocationViewModel,
@@ -84,7 +84,7 @@ fun ViewPagerScreen(
                 0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters, locationViewModel = locationViewModel)
                 1 -> {
                     keyboardController?.hide()
-                    StatisticsFragment(viewModel = oilCollectionViewModel, authViewModel = authViewModel)
+                    StatisticsFragment(viewModel = oilCollectionViewModel)
                 }
                 2 -> LocationsFragment(viewModel = locationViewModel)
                 3 -> {

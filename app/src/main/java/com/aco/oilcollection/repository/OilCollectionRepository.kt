@@ -4,6 +4,7 @@ import com.aco.oilcollection.database.entities.OilCollectionRecord
 import com.aco.oilcollection.database.dao.OilCollectionRecordDao
 import kotlinx.coroutines.flow.Flow
 
+
 class OilCollectionRepository(private val oilCollectionRecordDao: OilCollectionRecordDao) {
 
     suspend fun insertRecord(record: OilCollectionRecord) {
@@ -20,5 +21,9 @@ class OilCollectionRepository(private val oilCollectionRecordDao: OilCollectionR
 
     suspend fun getUserNameById(userId: Int): String? {
         return oilCollectionRecordDao.getUserNameById(userId)
+    }
+
+    suspend fun getLocationNameById(locationId: Int): String? {
+        return oilCollectionRecordDao.getLocationNameById(locationId)
     }
 }

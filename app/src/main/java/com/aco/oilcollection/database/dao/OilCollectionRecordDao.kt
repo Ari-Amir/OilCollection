@@ -20,4 +20,6 @@ interface OilCollectionRecordDao {
     @Query("SELECT name FROM users WHERE id = :userId")
     suspend fun getUserNameById(userId: Int): String?
 
+    @Query("SELECT name FROM locations WHERE id = :locationId")
+    suspend fun getLocationNameById(locationId: Int): String?
 }
