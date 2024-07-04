@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aco.oilcollection.R
 import com.aco.oilcollection.utils.getCurrentDate
+import com.aco.oilcollection.viewmodel.LocationViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +33,7 @@ import com.aco.oilcollection.utils.getCurrentDate
 fun InputFragment(
     remainingVolume: Int,
     onAddLiters: (Int, String) -> Unit,
+    locationViewModel: LocationViewModel
 ) {
     var liters by remember { mutableStateOf("") }
     val currentDate = remember { mutableStateOf(getCurrentDate()) }
@@ -40,27 +42,7 @@ fun InputFragment(
     var enteredLiters by remember { mutableIntStateOf(0) }
     var expanded by remember { mutableStateOf(false) }
     var selectedLocation by remember { mutableStateOf("Select location") }
-    val locations = listOf(
-        "KFC Mt Albert",
-        "KFC Mt Roskill",
-        "KFC Manukau",
-        "McDonald's East Tamaki",
-        "McDonald's North Shore",
-        "McDonald's Britomart",
-        "McDonald's Avondale",
-        "McDonald's New Lynn",
-        "McDonald's Takanini",
-        "KFC Mt Albert",
-        "KFC Mt Roskill",
-        "KFC Manukau",
-        "McDonald's East Tamaki",
-        "McDonald's North Shore",
-        "McDonald's Britomart",
-        "McDonald's Avondale",
-        "McDonald's New Lynn",
-        "McDonald's Takanini"
-    )
-
+    val locations by locationViewModel.locations.collectAsState()
 
     fun handleAddLiters() {
         enteredLiters = liters.filter { it.isDigit() }.toIntOrNull() ?: 0
@@ -104,7 +86,7 @@ fun InputFragment(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             title = { Text("Confirm Action") },
-            text = { Text("Are you sure you want to add $enteredLiters liters to $selectedLocation?") },
+            text = { Text("Are you sure you want to add $enteredLiters liters to $selectedLocation?")},
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -237,11 +219,11 @@ fun InputFragment(
                         locations.forEach { location ->
                             DropdownMenuItem(
                                 onClick = {
-                                    selectedLocation = location
+                                    selectedLocation = location.name
                                     expanded = false
                                 },
                                 modifier = Modifier.fillMaxWidth(),
-                                text = { Text(text = location) }
+                                text = { Text(text = location.name) }
                             )
                         }
                     }

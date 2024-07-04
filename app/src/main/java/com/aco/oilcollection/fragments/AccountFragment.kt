@@ -30,7 +30,7 @@ fun AccountFragment(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 25.dp)
-                .padding(top = 150.dp), // Adjust as needed
+                .padding(top = 150.dp),
             shape = RoundedCornerShape(15.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 12.dp)
         ) {
@@ -40,7 +40,7 @@ fun AccountFragment(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Personal Information",
+                    text = "User Information",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,

@@ -12,8 +12,8 @@ android {
         applicationId = "com.aco.oilcollection"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1"
+//        versionCode = 1
+//        versionName = "1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -22,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.room.Room
 import com.aco.oilcollection.database.AppDatabase
+import com.aco.oilcollection.repository.LocationRepository
 import com.aco.oilcollection.repository.OilCollectionRepository
 import com.aco.oilcollection.ui.AuthScreen
 import com.aco.oilcollection.ui.BlockScreen
@@ -32,6 +33,8 @@ import com.aco.oilcollection.utils.alignBottomWithPadding
 import com.aco.oilcollection.utils.getCurrentDateTime
 import com.aco.oilcollection.viewmodel.AuthViewModel
 import com.aco.oilcollection.viewmodel.AuthViewModelFactory
+import com.aco.oilcollection.viewmodel.LocationViewModel
+import com.aco.oilcollection.viewmodel.LocationViewModelFactory
 import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 import com.aco.oilcollection.viewmodel.OilCollectionViewModelFactory
 import kotlinx.coroutines.launch
@@ -101,10 +104,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                             composable("home") {
-                                val repository = OilCollectionRepository(database.oilCollectionRecordDao())
-                                val viewModel: OilCollectionViewModel =
-                                    viewModel(factory = OilCollectionViewModelFactory(repository))
+                                val oilCollectionRepository = OilCollectionRepository(database.oilCollectionRecordDao())
+                                val oilCollectionViewModel: OilCollectionViewModel = viewModel(factory = OilCollectionViewModelFactory(oilCollectionRepository))
+                                val locationRepository = LocationRepository(database.locationDao())
+                                val locationViewModel: LocationViewModel = viewModel(factory = LocationViewModelFactory(locationRepository))
                                 val authViewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(database.userDao()))
+
 
                                 LaunchedEffect(Unit) {
                                     try {
@@ -118,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
 
-                                val remainingVolume by viewModel.remainingVolume.collectAsState()
+                                val remainingVolume by oilCollectionViewModel.remainingVolume.collectAsState()
                                 val isTrialExpired = remember { isTrialPeriodExpired() }
 
                                 if (isTrialExpired) {
@@ -130,17 +135,17 @@ class MainActivity : ComponentActivity() {
                                             remainingVolume = remainingVolume,
                                             onAddLiters = { liters, location ->
                                                 val currentDateTime = getCurrentDateTime()
-                                                viewModel.addRecord(
+                                                oilCollectionViewModel.addRecord(
                                                     currentDateTime,
                                                     liters,
                                                     currentUserId ?: 1,
                                                     location
                                                 )
                                             },
-                                            viewModel = viewModel,
+                                            oilCollectionViewModel = oilCollectionViewModel,
                                             authViewModel = authViewModel,
-                                            navController = navController
-                                        )
+                                            locationViewModel = locationViewModel,
+                                            navController = navController)
 
                                         Text(
                                             text = "® 2024 AriAmir",

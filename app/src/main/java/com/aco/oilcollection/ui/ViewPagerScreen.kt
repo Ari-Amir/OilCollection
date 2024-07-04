@@ -13,12 +13,14 @@ import androidx.navigation.NavHostController
 import com.aco.oilcollection.fragments.InputFragment
 import com.aco.oilcollection.fragments.StatisticsFragment
 import com.aco.oilcollection.fragments.AccountFragment
+import com.aco.oilcollection.fragments.LocationsFragment
 import com.aco.oilcollection.viewmodel.OilCollectionViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import com.aco.oilcollection.viewmodel.AuthViewModel
+import com.aco.oilcollection.viewmodel.LocationViewModel
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
@@ -26,8 +28,9 @@ fun ViewPagerScreen(
     modifier: Modifier = Modifier,
     remainingVolume: Int,
     onAddLiters: (Int, String) -> Unit,
-    viewModel: OilCollectionViewModel,
+    oilCollectionViewModel: OilCollectionViewModel,
     authViewModel: AuthViewModel,
+    locationViewModel: LocationViewModel,
     navController: NavHostController
 ) {
     val pagerState = rememberPagerState()
@@ -56,7 +59,7 @@ fun ViewPagerScreen(
                 }
             )
             Tab(
-                text = { Text("Account") },
+                text = { Text("Locations") },
                 selected = pagerState.currentPage == 2,
                 onClick = {
                     coroutineScope.launch {
@@ -65,15 +68,26 @@ fun ViewPagerScreen(
                     }
                 }
             )
+            Tab(
+                text = { Text("Account") },
+                selected = pagerState.currentPage == 3,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(3)
+                        keyboardController?.hide()
+                    }
+                }
+            )
         }
-        HorizontalPager(count = 3, state = pagerState) { page ->
+        HorizontalPager(count = 4, state = pagerState) { page ->
             when (page) {
-                0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters)
+                0 -> InputFragment(remainingVolume = remainingVolume, onAddLiters = onAddLiters, locationViewModel = locationViewModel)
                 1 -> {
                     keyboardController?.hide()
-                    StatisticsFragment(viewModel = viewModel, authViewModel = authViewModel)
+                    StatisticsFragment(viewModel = oilCollectionViewModel, authViewModel = authViewModel)
                 }
-                2 -> {
+                2 -> LocationsFragment(viewModel = locationViewModel)
+                3 -> {
                     keyboardController?.hide()
                     AccountFragment(authViewModel = authViewModel, navController = navController)
                 }
